@@ -37,6 +37,8 @@ class Inbox {
 private:
 	Communication* SearchCommunicaton(string subject);
 
+
+
 };
 
 int main() {
