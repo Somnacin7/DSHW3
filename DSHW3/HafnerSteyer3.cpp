@@ -25,17 +25,26 @@ private:
 	Communication* newer;
 	Communication* older;
 public:
+	int size() {
+		return numOfEmails;
+	}
+
+
 };
 
 class Inbox {
+private:
+	Communication* SearchCommunicaton(string subject);
+
+	Inbox(Inbox& other);
+	~Inbox();
+
+public:
 	void InsertEmail(Email*);
 
 	bool DeleteCommunication(string subject);
 
 	void DisplayInbox();
-	
-private:
-	Communication* SearchCommunicaton(string subject);
 
 
 
