@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 // Email class
 class Email {
 private:
@@ -17,34 +18,32 @@ public:
 		this->to = to;
 		this->from = from;
 		this->message = message;
+		this->newer = NULL;
+		this->older = NULL;
 	}
 
-	
 	// Getters
 	string getTo() { return to; }
 	string getFrom() { return from; }
 	string getMessage() { return message; }
 
-
+	// pointers to the next and previous emails
 	Email* newer;
 	Email* older;
-
-	//~Email() {
-
-	//}
-	
 };
+
 
 // Communication class
 class Communication {
 private:
 	string subject;
 	int numOfEmails;
+
+	// pointer to head of linked list of emails
 	Email* newestEmail;
 
-	
-
 public:
+	// pointers to next and previous communications
 	Communication* newer;
 	Communication* older;
 
@@ -66,8 +65,8 @@ public:
 		this->newestEmail = other.newestEmail;
 	}
 		
-	// Add an email at the head
-	void InsertEmail(Email* email) {
+	// This function adds an email at the head of the list
+	void NewEmail(Email* email) {
 		email->older = newestEmail;
 		newestEmail = email;
 		newestEmail->newer = NULL;
@@ -91,9 +90,11 @@ public:
 	//}
 };
 
+
 // Inbox class
 class Inbox {
 private:
+	// this function returns a pointer to the communication with the given subject
 	Communication* SearchCommunicaton(string subject) {
 		Communication* comm = top;
 		while (comm != NULL) {
@@ -102,46 +103,55 @@ private:
 			}
 			comm = comm->older;
 		}
+		// if no such communication exists, return NULL
 		return NULL;
 	}
 
+	// pointers to the head and tail of the list of communications
 	Communication* top;
 	Communication* bottom;
 
 public:
+	// constructor
 	Inbox() {
 		top = NULL;
 		bottom = NULL;
 	}
 
-
+	// copy constructor
 	Inbox(Inbox& other) {
 		top = other.top;
 		bottom = other.bottom;
 	}
 
-
-
+	// This function adds a new email to its corresponding communication,
+	// or creates a new communication if one does not exist.
+	// Most recently updated communications are moved to the top of the inbox.
 	void InsertEmail(Email* email, string subject) {
 
 		// search for a communication with the given subject to place the email in
 		Communication* comm = SearchCommunicaton(subject);
-		if (comm != NULL) {
-			comm->InsertEmail(email);
+
+		if (comm != NULL) { // if a communication already exists
+			comm->NewEmail(email);
 
 			// if not already there, move the communication to the top of the inbox
 			if (comm->newer != NULL) {
 				if (comm->older != NULL) {
 					(comm->older)->newer = comm->newer;
 				}
+				else {
+					this->bottom = comm->newer;
+				}
 				(comm->newer)->older = comm->older;
 				comm->older = this->top;
 				comm->newer = NULL;
+				(this->top)->newer = comm;
 				this->top = comm;
 			}
 		}
 		else {
-			// create a new communication
+			// create a new communication if one does not exist
 			comm = new Communication(subject, email);
 
 			// place the new communication at the top of the inbox
@@ -157,7 +167,7 @@ public:
 		}
 	}
 	
-	// return true if successful, false for failure
+	// this function deletes a communication and returns true if successful, false otherwise
 	bool DeleteCommunication(string subject) {
 		Communication* comm = SearchCommunicaton(subject);
 		if (comm != NULL) {
@@ -170,30 +180,32 @@ public:
 			delete comm;
 
 			return true;
-
 		}
+		// return false if no such communication was found
 		return false;
 	}
 
+	// this function displays the inbox in order and lists the number of emails
 	void DisplayInbox() {
 		if (top != NULL) {
 			Communication* curComm = top;
+
+			// get total number of emails
 			int size = 0;
 			while (curComm != NULL) {
 				size += curComm->size();
 				curComm = curComm->older;
 			}
 			
-			cout << "Inbox: number of emails is " << size << endl << endl;
+			cout << "\nInbox: total number of emails is " << size << endl << endl;
 
+			// list communications and the number of emails in each one
 			curComm = top;
-
 			while (curComm != NULL) {
-				cout << curComm->getSubject() << " -\t" << curComm->size() << endl;
+				cout << curComm->getSubject() << " - " << curComm->size() << endl;
 				curComm = curComm->older;
 			}
-
-
+			cout << endl;
 		}
 	}
 
@@ -212,7 +224,6 @@ int main() {
 	string subject = "";
 	Inbox myInbox;
 	Email* mail = new Email("recipient", "sender", "text");
-	Communication comm((string)"sub", mail);
 
 	cout << "Enter email subjects one at a time (press enter after each one)." << endl;
 	cout << "When you are finished, enter the word 'done'" << endl << endl;
@@ -220,7 +231,6 @@ int main() {
 	// get subjects from user
 	while (getline(cin, subject) && subject != "done") {
 		myInbox.InsertEmail(mail, subject);
-		
 	}
 
 	//display inbox
