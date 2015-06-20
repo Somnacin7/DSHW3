@@ -103,15 +103,23 @@ public:
 		if (comm != NULL) {
 			comm->InsertEmail(email);
 
-			// move the communication to the top of the inbox
-
+			// if not already there, move the communication to the top of the inbox
+			if (comm->newer != NULL) {
+				(comm->older)->newer = comm->newer;
+				(comm->newer)->older = comm->older;
+				comm->older = this->top;
+				comm->newer = NULL;
+				this->top = comm;
+			}
 		}
 		else {
 			// create a new communication
 			comm = new Communication(subject, email);
 
 			// place the new communication at the top of the inbox
-			comm
+			comm->older = this->top;
+			comm->newer = NULL;
+			this->top = comm;
 		}
 	}
 	
