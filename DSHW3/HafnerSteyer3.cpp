@@ -1,3 +1,15 @@
+// Authors: Evan Hafner, Robin Steyer
+// Course Title: Data Structures
+// Course Number: CS2028
+// Instructor: Anca Ralescu
+// TA: Suryadip Chakraborty
+// Abstract: Assignment 3: The purpose of this program is to
+//	design and implement an Inbox class for an e-mail system. 
+//	The Inbox for this assignment will be a very simplified version.
+//	It will consist of a set of communications,
+//	where each communication consists of the set of emails having the same subject.
+// Preconditions: ?
+// Postconditions: ?
 
 #include <iostream>
 #include <string>
