@@ -95,8 +95,12 @@ private:
 	Communication* bottom;
 
 public:
-	Inbox() {
+	Inbox() {}
 
+
+	Inbox(Inbox& other) {
+		top = other.top;
+		bottom = other.bottom;
 	}
 
 
@@ -147,7 +151,23 @@ public:
 	}
 
 	void DisplayInbox() {
+		if (top != NULL) {
+			Communication* curComm = top;
+			int size = 0;
+			while (curComm != NULL) {
+				size += curComm->size();
+			}
+			
+			cout << "Inbox: number of emails is " << size << endl << endl;
 
+			curComm = top;
+
+			while (curComm != NULL) {
+				cout << curComm->getSubject() << " -\t" << curComm->size() << endl;
+			}
+
+
+		}
 	}
 
 	~Inbox() {
