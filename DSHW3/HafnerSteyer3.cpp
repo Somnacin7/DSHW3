@@ -28,6 +28,10 @@ public:
 
 	Email* newer;
 	Email* older;
+
+	~Email() {
+
+	}
 	
 };
 
@@ -50,6 +54,7 @@ public:
 		newestEmail = email;
 		newestEmail->newer = NULL;
 		newestEmail->older = NULL;
+		numOfEmails = 1;
 	}
 
 
@@ -59,6 +64,7 @@ public:
 		email->older = newestEmail;
 		newestEmail = email;
 		newestEmail->newer = NULL;
+		numOfEmails++;
 	}
 
 	// Getters
@@ -74,6 +80,7 @@ public:
 			emailTmp = emailTmp->older;
 			delete emailTmp2;
 		}
+		
 	}
 };
 
@@ -156,6 +163,7 @@ public:
 			int size = 0;
 			while (curComm != NULL) {
 				size += curComm->size();
+				curComm = curComm->older;
 			}
 			
 			cout << "Inbox: number of emails is " << size << endl << endl;
@@ -164,6 +172,7 @@ public:
 
 			while (curComm != NULL) {
 				cout << curComm->getSubject() << " -\t" << curComm->size() << endl;
+				curComm = curComm->older;
 			}
 
 
@@ -199,5 +208,6 @@ int main() {
 	//display inbox
 	myInbox.DisplayInbox();
 
+	system("pause");
 	return 0;
 }
