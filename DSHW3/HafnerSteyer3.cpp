@@ -120,10 +120,14 @@ public:
 			comm->InsertEmail(email);
 
 			// if not already there, move the communication to the top of the inbox
-			if (comm->newer != NULL) {
-				(comm->older)->newer = comm->newer;
-				(comm->newer)->older = comm->older;
-				comm->older = this->top;
+			if (comm != top) {
+				Communication* newer = comm->newer;
+				Communication* older = comm->older;
+
+				older->newer = newer;
+				newer->older = older;
+
+				comm->older = top;
 				comm->newer = NULL;
 				this->top = comm;
 			}
@@ -193,15 +197,14 @@ public:
 int main() {
 	string subject = "";
 	Inbox myInbox;
-	Email* mail = new Email("recipient", "sender", "text");
-	Communication comm((string)"sub", mail);
+	
 
 	cout << "Enter email subjects one at a time (press enter after each one)." << endl;
 	cout << "When you are finished, enter the word 'done'" << endl << endl;
 	
 	// get subjects from user
 	while (getline(cin, subject) && subject != "done") {
-		myInbox.InsertEmail(mail, subject);
+		myInbox.InsertEmail(new Email("recipient", "sender", "text"), subject);
 		
 	}
 
