@@ -95,7 +95,10 @@ private:
 	Communication* bottom;
 
 public:
-	Inbox() {}
+	Inbox() {
+		top = NULL;
+		bottom = NULL;
+	}
 
 
 	Inbox(Inbox& other) {
