@@ -20,10 +20,11 @@ public:
 	}
 
 	
-
+	// Getters
 	string getTo() { return to; }
 	string getFrom() { return from; }
 	string getMessage() { return message; }
+
 
 	Email* newer;
 	Email* older;
@@ -53,20 +54,18 @@ public:
 
 
 		
-
+	// Add an email at the head
 	void InsertEmail(Email* email) {
 		email->older = newestEmail;
 		newestEmail = email;
 		newestEmail->newer = NULL;
 	}
 
-	string getSubject() {
-		return subject;
-	}
-
+	// Getters
+	string getSubject() { return subject; }
 	int size() { return numOfEmails; }
 
-
+	// Destructors
 	~Communication() {
 		Email* emailTmp = newestEmail;
 		Email* emailTmp2 = newestEmail;
@@ -96,6 +95,12 @@ private:
 	Communication* bottom;
 
 public:
+	Inbox() {
+
+	}
+
+
+
 	void InsertEmail(Email* email, string subject) {
 
 		// search for a communication with the given subject to place the email in
