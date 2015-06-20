@@ -29,9 +29,9 @@ public:
 	Email* newer;
 	Email* older;
 
-	~Email() {
+	//~Email() {
 
-	}
+	//}
 	
 };
 
@@ -57,7 +57,14 @@ public:
 		numOfEmails = 1;
 	}
 
-
+	// copy constructor
+	Communication(Communication& other) {
+		this->newer = other.newer;
+		this->older = other.older;
+		this->subject = other.subject;
+		this->numOfEmails = other.numOfEmails;
+		this->newestEmail = other.newestEmail;
+	}
 		
 	// Add an email at the head
 	void InsertEmail(Email* email) {
@@ -72,16 +79,16 @@ public:
 	int size() { return numOfEmails; }
 
 	// Destructors
-	~Communication() {
-		Email* emailTmp = newestEmail;
-		Email* emailTmp2 = newestEmail;
-		while (emailTmp != NULL) {
-			emailTmp2 = emailTmp;
-			emailTmp = emailTmp->older;
-			delete emailTmp2;
-		}
-		
-	}
+	//~Communication() {
+	//	Email* emailTmp = newestEmail;
+	//	Email* emailTmp2 = newestEmail;
+	//	while (emailTmp != NULL) {
+	//		emailTmp2 = emailTmp;
+	//		emailTmp = emailTmp->older;
+	//		delete emailTmp2;
+	//	}
+	//	
+	//}
 };
 
 // Inbox class
@@ -124,7 +131,9 @@ public:
 
 			// if not already there, move the communication to the top of the inbox
 			if (comm->newer != NULL) {
-				(comm->older)->newer = comm->newer;
+				if (comm->older != NULL) {
+					(comm->older)->newer = comm->newer;
+				}
 				(comm->newer)->older = comm->older;
 				comm->older = this->top;
 				comm->newer = NULL;
@@ -136,9 +145,15 @@ public:
 			comm = new Communication(subject, email);
 
 			// place the new communication at the top of the inbox
+			if (this->top != NULL) {
+				(this->top)->newer = comm;
+			}
 			comm->older = this->top;
 			comm->newer = NULL;
 			this->top = comm;
+			if (this->bottom == NULL) {
+				this->bottom = comm;
+			}
 		}
 	}
 	
