@@ -77,17 +77,17 @@ public:
 	string getSubject() { return subject; }
 	int size() { return numOfEmails; }
 
-	// Destructors
-	//~Communication() {
-	//	Email* emailTmp = newestEmail;
-	//	Email* emailTmp2 = newestEmail;
-	//	while (emailTmp != NULL) {
-	//		emailTmp2 = emailTmp;
-	//		emailTmp = emailTmp->older;
-	//		delete emailTmp2;
-	//	}
-	//	
-	//}
+	 // Destructor
+	~Communication() {
+		Email* emailTmp = newestEmail;
+		Email* emailTmp2 = newestEmail;
+		while (emailTmp != NULL) {
+			emailTmp2 = emailTmp;
+			emailTmp = emailTmp->older;
+			delete emailTmp2;
+		}
+		
+	}
 };
 
 
