@@ -66,7 +66,7 @@ public:
 	}
 
 	// This function adds an email at the head of the list
-	void NewEmail(Email* email) {
+	void newEmail(Email* email) {
 		email->older = newestEmail;
 		newestEmail = email;
 		newestEmail->newer = NULL;
@@ -95,7 +95,7 @@ public:
 class Inbox {
 private:
 	// this function returns a pointer to the communication with the given subject
-	Communication* SearchCommunicaton(string subject) {
+	Communication* searchCommunicaton(string subject) {
 		Communication* comm = top;
 		while (comm != NULL) {
 			if (comm->getSubject() == subject) {
@@ -127,13 +127,13 @@ public:
 	// This function adds a new email to its corresponding communication,
 	// or creates a new communication if one does not exist.
 	// Most recently updated communications are moved to the top of the inbox.
-	void InsertEmail(Email* email, string subject) {
+	void insertEmail(Email* email, string subject) {
 
 		// search for a communication with the given subject to place the email in
-		Communication* comm = SearchCommunicaton(subject);
+		Communication* comm = searchCommunicaton(subject);
 
 		if (comm != NULL) { // if a communication already exists
-			comm->NewEmail(email);
+			comm->newEmail(email);
 
 			// if not already there, move the communication to the top of the inbox
 			if (comm->newer != NULL) {
@@ -168,8 +168,8 @@ public:
 	}
 	
 	// this function deletes a communication and returns true if successful, false otherwise
-	bool DeleteCommunication(string subject) {
-		Communication* comm = SearchCommunicaton(subject);
+	bool deleteCommunication(string subject) {
+		Communication* comm = searchCommunicaton(subject);
 		if (comm != NULL) {
 			Communication* newer = comm->newer;
 			Communication* older = comm->older;
@@ -186,7 +186,7 @@ public:
 	}
 
 	// this function displays the inbox in order and lists the number of emails
-	void DisplayInbox() {
+	void displayInbox() {
 		if (top != NULL) {
 			Communication* curComm = top;
 
@@ -230,12 +230,13 @@ int main() {
 	
 	// get subjects from user
 	while (getline(cin, subject) && subject != "done") {
-		myInbox.InsertEmail(new Email("recipient", "sender", "text"), subject);
+		myInbox.insertEmail(new Email("recipient", "sender", "text"), subject);
 		
 	}
 
+
 	//display inbox
-	myInbox.DisplayInbox();
+	myInbox.displayInbox();
 
 	system("pause");
 	return 0;
