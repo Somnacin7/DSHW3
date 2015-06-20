@@ -19,11 +19,15 @@ public:
 		this->message = message;
 	}
 
-	Email* newer;
-	Email* older;
+	
 
 	string getTo() { return to; }
 	string getFrom() { return from; }
+	string getMessage() { return message; }
+
+	Email* newer;
+	Email* older;
+	
 };
 
 // Communication class
@@ -33,10 +37,12 @@ private:
 	int numOfEmails;
 	Email* newestEmail;
 
+	
+
+public:
 	Communication* newer;
 	Communication* older;
 
-public:
 	// constructor
 	Communication(string subject, Email* email) {
 		this->subject = subject;
@@ -44,6 +50,8 @@ public:
 		newestEmail->newer = NULL;
 		newestEmail->older = NULL;
 	}
+
+
 		
 
 	void InsertEmail(Email* email) {
@@ -56,15 +64,18 @@ public:
 		return subject;
 	}
 
-	Communication* getNewer() {
-		return newer;
-	}
-
-	Communication* getOlder() {
-		return older;
-	}
-
 	int size() { return numOfEmails; }
+
+
+	~Communication() {
+		Email* emailTmp = newestEmail;
+		Email* emailTmp2 = newestEmail;
+		while (emailTmp != NULL) {
+			emailTmp2 = emailTmp;
+			emailTmp = emailTmp->older;
+			delete emailTmp2;
+		}
+	}
 };
 
 // Inbox class
@@ -76,7 +87,7 @@ private:
 			if (comm->getSubject() == subject) {
 				return comm;
 			}
-			comm = comm->getOlder();
+			comm = comm->older;
 		}
 		return NULL;
 	}
@@ -97,8 +108,22 @@ public:
 		}
 	}
 	
+	// return true if successful, false for failure
 	bool DeleteCommunication(string subject) {
+		Communication* comm = SearchCommunicaton(subject);
+		if (comm != NULL) {
+			Communication* newer = comm->newer;
+			Communication* older = comm->older;
 
+			newer->older = older;
+			older->newer = newer;
+
+			delete comm;
+
+			return true;
+
+		}
+		return false;
 	}
 
 	void DisplayInbox() {
@@ -106,22 +131,28 @@ public:
 	}
 
 	~Inbox() {
-
+		Communication* commTmp = top;
+		Communication* commTmp2 = top;
+		while (commTmp != NULL) {
+			commTmp2 = commTmp;
+			commTmp = commTmp->older;
+			delete commTmp2;
+		}
 	}
 };
 
 int main() {
 	string subject = "";
 	Inbox myInbox;
-	Email mail("recipient", "sender", "text");
-	Communication comm((string)"sub", &mail);
+	Email* mail = new Email("recipient", "sender", "text");
+	Communication comm((string)"sub", mail);
 
 	cout << "Enter email subjects one at a time (press enter after each one)." << endl;
 	cout << "When you are finished, enter the word 'done'" << endl << endl;
 	
 	// get subjects from user
 	while (getline(cin, subject) && subject != "done") {
-		myInbox.InsertEmail(&mail, subject);
+		myInbox.InsertEmail(mail, subject);
 		
 	}
 
