@@ -81,13 +81,20 @@ private:
 public:
 	void InsertEmail(Email* email, string subject) {
 
-		// search for a communicatino with the given subject to place the email in
+		// search for a communication with the given subject to place the email in
 		Communication* comm = SearchCommunicaton(subject);
 		if (comm != NULL) {
 			comm->InsertEmail(email);
+
+			// move the communication to the top of the inbox
+
 		}
 		else {
 			// create a new communication
+			comm = new Communication(subject, email);
+
+			// place the new communication at the top of the inbox
+			comm
 		}
 	}
 
